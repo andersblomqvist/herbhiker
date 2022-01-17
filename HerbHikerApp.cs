@@ -15,27 +15,19 @@ namespace HerbHikerApp
     {
         private Generator gen;
         private HerbBot bot;
-
         private MemoryReader mem;
+
+        private BackgroundWorker worker;
+        private bool generator;
 
         public HerbHiker()
         {
             InitializeComponent();
             CultureInfo.CurrentCulture = new CultureInfo("en-US", true);
             mem = new MemoryReader();
-        }
-
-        private void StartGenerator()
-        {
-            Console.WriteLine("Starting the waypoint generator ...");
-            gen = new Generator(mem);
-
-            PathControlGroup.Visible = true;
-        }
-
-        private void StartBot()
-        {
-            Console.WriteLine("Starting the bot ...");
+            worker = new BackgroundWorker();
+            generator = false;
+            ToggleGeneratorCheckBox.Enabled = false;
         }
 
         private void CheckForGameButton(object sender, EventArgs e)
@@ -44,8 +36,9 @@ namespace HerbHikerApp
             {
                 GameStatusLabel.Text = "Game Found";
                 GameStatusLabel.ForeColor = System.Drawing.Color.Green;
-                StartButton.Enabled = true;
                 mem.Init();
+                gen = new Generator(mem);
+                ToggleGeneratorCheckBox.Enabled = true;
             }
             else
             {
@@ -57,18 +50,12 @@ namespace HerbHikerApp
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (ToggleGeneratorCheckBox.Checked) StartGenerator();
-            else StartBot();
+            bot.Start();
         }
 
         private void TestPathButton_Click(object sender, EventArgs e)
         {
             gen.TestPath();
-        }
-
-        private void BotWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            
         }
 
         private void SavePathButton_Click(object sender, EventArgs e)
@@ -120,19 +107,54 @@ namespace HerbHikerApp
                         path.Add(p);
                     }
                 }
-                gen.LoadPath(path);
+                
                 Console.WriteLine("Successfully loaded path from file: {0}", dialog.FileName);
-                bot = new HerbBot(mem, path);
+
+                string fname = dialog.FileName.Split('\\').Last();
+                if (fname.Length > 29)
+                    fname = fname.Substring(0, 29) + "...";
+                LoadedPathLabel.Text = fname;
+
+                if (generator)
+                    gen.LoadPath(path);
+
+                if (bot == null)
+                    bot = new HerbBot(mem, path, worker, BotStatusLabel);
+
+                BotControls.Visible = true;
             }
         }
-
-        private void ButtonHoverToolTip(object sender, PopupEventArgs e) { }
 
         private void ObjectDumpButton_Click(object sender, EventArgs e)
         {
             mem.ReadObjects();
             Console.WriteLine("GameObject list:");
             mem.PrintObjects();
+        }
+
+        private void ToggleGeneratorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if(generator)
+            {
+                // turn off generator
+                Console.WriteLine("Disabling the waypoint generator ...");
+                gen.Disable();
+                PathControlGroup.Visible = false;
+                generator = false;
+            }
+            else
+            {
+                // start generator
+                Console.WriteLine("Starting the waypoint generator ...");
+                gen.Enable();
+                PathControlGroup.Visible = true;
+                generator = true;
+            }
+        }
+
+        private void StopButton_Click(object sender, EventArgs e)
+        {
+            bot.Stop();
         }
     }
 }

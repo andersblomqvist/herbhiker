@@ -10,6 +10,8 @@ namespace HerbHikerApp
     {
         public float x, y, z;
 
+        public Point() { x = y = z = 0f;}
+
         public Point(float x, float y, float z)
         {
             this.x = x;

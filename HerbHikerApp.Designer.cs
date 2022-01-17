@@ -29,7 +29,6 @@ namespace HerbHikerApp
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HerbHiker));
             this.button1 = new System.Windows.Forms.Button();
             this.GameStatusLabel = new System.Windows.Forms.Label();
@@ -37,12 +36,18 @@ namespace HerbHikerApp
             this.ToggleGeneratorCheckBox = new System.Windows.Forms.CheckBox();
             this.TestPathButton = new System.Windows.Forms.Button();
             this.SavePathButton = new System.Windows.Forms.Button();
-            this.buttonToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.LoadPathButton = new System.Windows.Forms.Button();
             this.PathControlGroup = new System.Windows.Forms.GroupBox();
-            this.BotWorker = new System.ComponentModel.BackgroundWorker();
             this.ObjectDumpButton = new System.Windows.Forms.Button();
+            this.BotControls = new System.Windows.Forms.GroupBox();
+            this.LoadedPathLabel = new System.Windows.Forms.Label();
+            this.StopButton = new System.Windows.Forms.Button();
+            this.PauseButton = new System.Windows.Forms.Button();
+            this.ResumeButton = new System.Windows.Forms.Button();
+            this.BotStatusLabel = new System.Windows.Forms.Label();
+            this.StatusLabel = new System.Windows.Forms.Label();
             this.PathControlGroup.SuspendLayout();
+            this.BotControls.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -68,14 +73,13 @@ namespace HerbHikerApp
             // 
             resources.ApplyResources(this.ToggleGeneratorCheckBox, "ToggleGeneratorCheckBox");
             this.ToggleGeneratorCheckBox.Name = "ToggleGeneratorCheckBox";
-            this.buttonToolTip.SetToolTip(this.ToggleGeneratorCheckBox, resources.GetString("ToggleGeneratorCheckBox.ToolTip"));
             this.ToggleGeneratorCheckBox.UseVisualStyleBackColor = true;
+            this.ToggleGeneratorCheckBox.CheckedChanged += new System.EventHandler(this.ToggleGeneratorCheckBox_CheckedChanged);
             // 
             // TestPathButton
             // 
             resources.ApplyResources(this.TestPathButton, "TestPathButton");
             this.TestPathButton.Name = "TestPathButton";
-            this.buttonToolTip.SetToolTip(this.TestPathButton, resources.GetString("TestPathButton.ToolTip"));
             this.TestPathButton.UseVisualStyleBackColor = true;
             this.TestPathButton.Click += new System.EventHandler(this.TestPathButton_Click);
             // 
@@ -86,30 +90,20 @@ namespace HerbHikerApp
             this.SavePathButton.UseVisualStyleBackColor = true;
             this.SavePathButton.Click += new System.EventHandler(this.SavePathButton_Click);
             // 
-            // buttonToolTip
-            // 
-            this.buttonToolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.ButtonHoverToolTip);
-            // 
             // LoadPathButton
             // 
             resources.ApplyResources(this.LoadPathButton, "LoadPathButton");
             this.LoadPathButton.Name = "LoadPathButton";
-            this.buttonToolTip.SetToolTip(this.LoadPathButton, resources.GetString("LoadPathButton.ToolTip"));
             this.LoadPathButton.UseVisualStyleBackColor = true;
             this.LoadPathButton.Click += new System.EventHandler(this.LoadPathButton_Click);
             // 
             // PathControlGroup
             // 
-            this.PathControlGroup.Controls.Add(this.LoadPathButton);
             this.PathControlGroup.Controls.Add(this.TestPathButton);
             this.PathControlGroup.Controls.Add(this.SavePathButton);
             resources.ApplyResources(this.PathControlGroup, "PathControlGroup");
             this.PathControlGroup.Name = "PathControlGroup";
             this.PathControlGroup.TabStop = false;
-            // 
-            // BotWorker
-            // 
-            this.BotWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BotWorker_DoWork);
             // 
             // ObjectDumpButton
             // 
@@ -118,18 +112,68 @@ namespace HerbHikerApp
             this.ObjectDumpButton.UseVisualStyleBackColor = true;
             this.ObjectDumpButton.Click += new System.EventHandler(this.ObjectDumpButton_Click);
             // 
+            // BotControls
+            // 
+            this.BotControls.Controls.Add(this.StatusLabel);
+            this.BotControls.Controls.Add(this.BotStatusLabel);
+            this.BotControls.Controls.Add(this.ResumeButton);
+            this.BotControls.Controls.Add(this.PauseButton);
+            this.BotControls.Controls.Add(this.StopButton);
+            this.BotControls.Controls.Add(this.LoadedPathLabel);
+            this.BotControls.Controls.Add(this.StartButton);
+            resources.ApplyResources(this.BotControls, "BotControls");
+            this.BotControls.Name = "BotControls";
+            this.BotControls.TabStop = false;
+            // 
+            // LoadedPathLabel
+            // 
+            resources.ApplyResources(this.LoadedPathLabel, "LoadedPathLabel");
+            this.LoadedPathLabel.Name = "LoadedPathLabel";
+            // 
+            // StopButton
+            // 
+            resources.ApplyResources(this.StopButton, "StopButton");
+            this.StopButton.Name = "StopButton";
+            this.StopButton.UseVisualStyleBackColor = true;
+            this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
+            // 
+            // PauseButton
+            // 
+            resources.ApplyResources(this.PauseButton, "PauseButton");
+            this.PauseButton.Name = "PauseButton";
+            this.PauseButton.UseVisualStyleBackColor = true;
+            // 
+            // ResumeButton
+            // 
+            resources.ApplyResources(this.ResumeButton, "ResumeButton");
+            this.ResumeButton.Name = "ResumeButton";
+            this.ResumeButton.UseVisualStyleBackColor = true;
+            // 
+            // BotStatusLabel
+            // 
+            resources.ApplyResources(this.BotStatusLabel, "BotStatusLabel");
+            this.BotStatusLabel.Name = "BotStatusLabel";
+            // 
+            // StatusLabel
+            // 
+            resources.ApplyResources(this.StatusLabel, "StatusLabel");
+            this.StatusLabel.Name = "StatusLabel";
+            // 
             // HerbHiker
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.BotControls);
+            this.Controls.Add(this.LoadPathButton);
             this.Controls.Add(this.ObjectDumpButton);
             this.Controls.Add(this.PathControlGroup);
             this.Controls.Add(this.ToggleGeneratorCheckBox);
-            this.Controls.Add(this.StartButton);
             this.Controls.Add(this.GameStatusLabel);
             this.Controls.Add(this.button1);
             this.Name = "HerbHiker";
             this.PathControlGroup.ResumeLayout(false);
+            this.BotControls.ResumeLayout(false);
+            this.BotControls.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,11 +187,16 @@ namespace HerbHikerApp
         private System.Windows.Forms.CheckBox ToggleGeneratorCheckBox;
         private System.Windows.Forms.Button TestPathButton;
         private System.Windows.Forms.Button SavePathButton;
-        private System.Windows.Forms.ToolTip buttonToolTip;
         private System.Windows.Forms.GroupBox PathControlGroup;
-        private System.ComponentModel.BackgroundWorker BotWorker;
         private System.Windows.Forms.Button LoadPathButton;
         private System.Windows.Forms.Button ObjectDumpButton;
+        private System.Windows.Forms.GroupBox BotControls;
+        private System.Windows.Forms.Label LoadedPathLabel;
+        private System.Windows.Forms.Button StopButton;
+        private System.Windows.Forms.Button PauseButton;
+        private System.Windows.Forms.Button ResumeButton;
+        private System.Windows.Forms.Label BotStatusLabel;
+        private System.Windows.Forms.Label StatusLabel;
     }
 }
 

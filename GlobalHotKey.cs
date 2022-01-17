@@ -89,6 +89,12 @@ namespace HerbHikerApp
                 throw new InvalidOperationException("Couldn’t register the hot key.");
         }
 
+        public void UnregisterHotKey()
+        {
+            UnregisterHotKey(_window.Handle, _currentId);
+            _currentId = _currentId - 1;
+        }
+
         /// <summary>
         /// A hot key has been pressed.
         /// </summary>

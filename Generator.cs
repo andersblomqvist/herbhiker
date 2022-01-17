@@ -20,14 +20,26 @@ namespace HerbHikerApp
         private readonly MemoryReader Mem;
         private List<Point> points;
 
+        private bool enabled;
+
         public Generator(MemoryReader mem)
         {
             hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(HotKeyPressed);
-            hook.RegisterHotKey(ModifierKeys.Shift, Keys.E);
-            Console.WriteLine("Welcome to the waypoint generator");
-
             this.Mem = mem;
+            enabled = true;
             points = new List<Point>();
+        }
+
+        internal void Disable()
+        {
+            enabled = false;
+            hook.UnregisterHotKey();
+        }
+
+        internal void Enable()
+        {
+            enabled = true;
+            hook.RegisterHotKey(ModifierKeys.Shift, Keys.E);
         }
 
         private void SavePoint()
@@ -40,6 +52,8 @@ namespace HerbHikerApp
 
         private void HotKeyPressed(object sender, KeyPressedEventArgs e)
         {
+            if (!enabled)
+                return;
             SavePoint();
         }
 
