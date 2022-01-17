@@ -20,7 +20,7 @@ namespace HerbHikerApp
 
         internal void Start()
         {
-
+            Console.WriteLine("test commit");
         }
 
         internal void DoWork()
