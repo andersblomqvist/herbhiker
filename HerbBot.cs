@@ -145,9 +145,11 @@ namespace HerbHikerApp
             Console.WriteLine("Looting herb soon ...");
 
             // time it will take for player to move last distance to herb and gather it.
-            System.Threading.Thread.Sleep(8000);
+            System.Threading.Thread.Sleep(6000);
             Console.WriteLine("Begin looting ...");
-            looting.LootAll();
+            Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_1);
+            System.Threading.Thread.Sleep(10);
+            Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_1);
             System.Threading.Thread.Sleep(500);
         }
 
