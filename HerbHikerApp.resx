@@ -411,6 +411,9 @@
   <data name="&gt;&gt;BotStatusLabel.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="ResumeButton.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="ResumeButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -437,6 +440,9 @@
   </data>
   <data name="&gt;&gt;ResumeButton.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="PauseButton.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="PauseButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>

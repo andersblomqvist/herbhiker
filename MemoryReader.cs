@@ -29,12 +29,17 @@ namespace HerbHikerApp
             objectDump = new ObjectDump(mem);
         }
 
+        internal IntPtr GetHandle()
+        {
+            return mem.pHandle;
+        }
+
         /// <summary>
         /// Reads nearby game objects.
         /// </summary>
-        internal void ReadObjects()
+        internal GameObject[] ReadObjects()
         {
-            objects = objectDump.Dump();
+            return objectDump.Dump();
         }
 
         /// <summary>
@@ -94,9 +99,63 @@ namespace HerbHikerApp
             mem.WriteMemory(Offsets.CTM.DESTINATION_Z, "float", p.z.ToString());
         }
 
+        /// <summary>
+        /// Reads the guid of a nearby herb (yellow dot on minimap)
+        /// </summary>
+        /// <returns></returns>
+        internal ulong ReadNearbyHerb()
+        {
+            int addr = mem.ReadInt(Offsets.NODE_GUID);
+            if (addr == 0)
+                return 0;
+            return (ulong)mem.ReadLong(addr.ToString("X"));
+        }
+
+        internal void ClearNearbyHerb()
+        {
+            int addr = mem.ReadInt(Offsets.NODE_GUID);
+            if (addr == 0)
+                return;
+            mem.WriteMemory(addr.ToString("X"), "long", "0");
+        }
+
         internal void SetCTMAction(string actionType)
         {
             mem.WriteMemory(Offsets.CTM.ACTION, "int", actionType);
+            if (actionType == "4")
+                mem.WriteMemory(Offsets.CTM.DISTANCE, "float", "0.5");
+        }
+
+        /// <summary>
+        /// Sets the CTM guid object id which is needed for looting. Due to memory.dll
+        /// not supporting ulong (unsigned int64), only regular long, we have to write
+        /// an array of size 8 with bytes instead.
+        /// </summary>
+        /// <param name="guid"></param>
+        internal void SetCTMGUID(ulong guid)
+        {
+            // convert guid to an array of bytes. We know its 8 bytes.
+            // this works but probably a better way of doing it.
+
+            // generates: "F110000652000E7F"
+            // goal is an array with: {0xF1, 0x10, 0x00, 0x06, 0x52, 0x00, 0x0E, 0x7F}
+            string hex = guid.ToString("X");
+            byte[] bytes = new byte[8];
+            for(int i = 0; i < 8; i++)
+            {
+                // get the two bytes from string
+                string twob = "" + hex.ElementAt(0 + (2 * i)) + hex.ElementAt(1 + (2 * i));
+
+                // convert to int
+                bytes[7 - i] = (byte)Convert.ToUInt32(twob, 16);
+            }
+
+            mem.WriteBytes(Offsets.CTM.GUID, bytes);
+        }
+
+        internal ulong ReadCTMGUID()
+        {
+            return (ulong) mem.ReadLong(Offsets.CTM.GUID);
         }
 
         internal void PrintObjects()

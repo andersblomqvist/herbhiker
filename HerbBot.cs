@@ -15,10 +15,14 @@ namespace HerbHikerApp
         // How near player need to be in order to count as point is reached.
         private const double DISTANCE_THRESHOLD = 3d;
 
+        // If player closer than this we initiate loot action
+        private const double LOOT_DISTANCE = 15d;
+
         private readonly MemoryReader mem;
         private List<Point> path;
         private BackgroundWorker worker;
         private Label statusLabel;
+        private Loot looting;
 
         public HerbBot(MemoryReader mem, List<Point> path, BackgroundWorker worker, Label statusLabel)
         {
@@ -36,6 +40,8 @@ namespace HerbHikerApp
             this.worker.DoWork += new DoWorkEventHandler(DoWork);
             this.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(PathFinished);
             this.worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
+
+            this.looting = new Loot();
         }
 
         internal void Start()
@@ -61,11 +67,7 @@ namespace HerbHikerApp
             {
                 Point p = path[i];
 
-                // Set ctm destination x, y, z
-                mem.SetDestionation(p);
-
-                // Set ctm action to 4
-                mem.SetCTMAction(Offsets.CTM.ACTION_TYPE_MOVE);
+                MoveToPoint(p);
 
                 // Calculate percentage complete (how many points we have gone through)
                 int percentComplete = (int)((float)i / (float)path.Count * 100);
@@ -74,9 +76,37 @@ namespace HerbHikerApp
                 Console.WriteLine("Moving to point ...");
                 while (DistanceToPoint(p) > DISTANCE_THRESHOLD)
                 {
-                    // while we've not reached the point we should search for nearby herbs
-                    // if a herb is found we leave path and go pick it up
-                    // after pickup we return to path
+                    // while we haven't reached the point we should search for nearby herbs
+                    ulong herb = mem.ReadNearbyHerb();
+                    if(herb != 0)
+                    {
+                        Console.WriteLine("Searching for the nearby herb");
+                        GameObject[] objects = mem.ReadObjects();
+
+                        // search the object d wump list
+                        for (int j = 0; j < ObjectDump.SIZE; j++)
+                        {
+                            // when object is null there's no more objects in array
+                            if (objects[j] == null)
+                                break;
+                            // if a herb is found we leave path and go pick it up
+                            else if (objects[j].guid == herb)
+                            {
+                                Console.WriteLine("Found nearby herb!");
+                                GatherHerb(herb, objects[j].position);
+                                Console.WriteLine("Successfully looted herb");
+
+                                // sets the herb guid to 0. Will be set to new id if another herb is close
+                                mem.ClearNearbyHerb();
+
+                                break;
+                            }
+                        }
+
+                        // after pickup we return to path
+                        MoveToPoint(p);
+                        Console.WriteLine("Moving back to point in path");
+                    }
                 }
 
                 Console.WriteLine("Reached point, going to next!");
@@ -89,6 +119,50 @@ namespace HerbHikerApp
                     break;
                 }
             }
+
+            Console.WriteLine("Path finished");
+        }
+
+        /// <summary>
+        /// Set the CTM destionation and action for moving to a point.
+        /// The action type is set to 4 (MOVE)
+        /// </summary>
+        /// <param name="p"></param>
+        private void MoveToPoint(Point p)
+        {
+            // Set ctm destination x, y, z
+            mem.SetDestionation(p);
+
+            // Set ctm action to 4
+            mem.SetCTMAction(Offsets.CTM.ACTION_TYPE_MOVE);
+        }
+
+        private void PickupHerb(ulong guid, Point p)
+        {
+            // set ctm stuff to pickup herb
+            mem.SetCTMGUID(guid);
+            mem.SetCTMAction(Offsets.CTM.ACTION_TYPE_LOOT);
+            Console.WriteLine("Looting herb soon ...");
+
+            // time it will take for player to move last distance to herb and gather it.
+            System.Threading.Thread.Sleep(8000);
+            Console.WriteLine("Begin looting ...");
+            looting.LootAll();
+            System.Threading.Thread.Sleep(500);
+        }
+
+        /// <summary>
+        /// Subroutine for leaving path and going to gather herb
+        /// </summary>
+        private void GatherHerb(ulong guid, Point herbPosition)
+        {
+            MoveToPoint(herbPosition);
+
+            // wait until we're close enough for pickup action
+            while (Point.Distance(mem.ReadPlayerPosition(), herbPosition) > LOOT_DISTANCE) {}
+
+            // start pickup procedure
+            PickupHerb(guid, herbPosition);
         }
 
         private void PathFinished(object sender, RunWorkerCompletedEventArgs e)
@@ -136,11 +210,7 @@ namespace HerbHikerApp
         private double DistanceToPoint(Point p)
         {
             Point player = mem.ReadPlayerPosition();
-            double distance = Math.Sqrt(
-                (p.x - player.x) * (p.x - player.x) +
-                (p.y - player.y) * (p.y - player.y) +
-                (p.z - player.z) * (p.z - player.z));
-            return distance;
+            return Point.Distance(p, player);
         }
     }
 }

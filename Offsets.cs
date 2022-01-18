@@ -21,15 +21,14 @@ namespace Herbhiker
             public const string DESTINATION_Y = "base+0x8A1268";
             public const string DESTINATION_Z = "base+0x8A126C";
 
+            public const string DISTANCE = "0xCA11E4";
+
             public const string ACTION = "0x00CA11F4";
             public const string GUID = "0x00CA11F8";
 
             public const string ACTION_TYPE_IDLE = "13";
             public const string ACTION_TYPE_LOOT = "7";
             public const string ACTION_TYPE_MOVE = "4";
-
-            // not ctm but anyways
-            public const string NODE_GUID = "base+0x007F8120";
         }
 
         public struct ObjManager
@@ -38,5 +37,7 @@ namespace Herbhiker
             public const string OBJ_MANAGER = "0x2ED0"; // clientConn + 2ed0
             public const string LIST_START = "0xAC"; // objManager + AC
         }
+
+        public const string NODE_GUID = "base+0x007F8120";
     }
 }

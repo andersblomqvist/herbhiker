@@ -19,6 +19,20 @@ namespace HerbHikerApp
             this.z = z;
         }
 
+        /// <summary>
+        /// Returns the distance between two points
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns>double represeting distance</returns>
+        public static double Distance(Point p1, Point p2)
+        {
+            return Math.Sqrt(
+                (p1.x - p2.x) * (p1.x - p2.x) +
+                (p1.y - p2.y) * (p1.y - p2.y) +
+                (p1.z - p2.z) * (p1.z - p2.z));
+        }
+            
         public override string ToString()
         {
             return x + " " + y + " " + z;

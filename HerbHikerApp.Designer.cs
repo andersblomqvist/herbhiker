@@ -40,12 +40,12 @@ namespace HerbHikerApp
             this.PathControlGroup = new System.Windows.Forms.GroupBox();
             this.ObjectDumpButton = new System.Windows.Forms.Button();
             this.BotControls = new System.Windows.Forms.GroupBox();
-            this.LoadedPathLabel = new System.Windows.Forms.Label();
-            this.StopButton = new System.Windows.Forms.Button();
-            this.PauseButton = new System.Windows.Forms.Button();
-            this.ResumeButton = new System.Windows.Forms.Button();
-            this.BotStatusLabel = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
+            this.BotStatusLabel = new System.Windows.Forms.Label();
+            this.ResumeButton = new System.Windows.Forms.Button();
+            this.PauseButton = new System.Windows.Forms.Button();
+            this.StopButton = new System.Windows.Forms.Button();
+            this.LoadedPathLabel = new System.Windows.Forms.Label();
             this.PathControlGroup.SuspendLayout();
             this.BotControls.SuspendLayout();
             this.SuspendLayout();
@@ -125,10 +125,27 @@ namespace HerbHikerApp
             this.BotControls.Name = "BotControls";
             this.BotControls.TabStop = false;
             // 
-            // LoadedPathLabel
+            // StatusLabel
             // 
-            resources.ApplyResources(this.LoadedPathLabel, "LoadedPathLabel");
-            this.LoadedPathLabel.Name = "LoadedPathLabel";
+            resources.ApplyResources(this.StatusLabel, "StatusLabel");
+            this.StatusLabel.Name = "StatusLabel";
+            // 
+            // BotStatusLabel
+            // 
+            resources.ApplyResources(this.BotStatusLabel, "BotStatusLabel");
+            this.BotStatusLabel.Name = "BotStatusLabel";
+            // 
+            // ResumeButton
+            // 
+            resources.ApplyResources(this.ResumeButton, "ResumeButton");
+            this.ResumeButton.Name = "ResumeButton";
+            this.ResumeButton.UseVisualStyleBackColor = true;
+            // 
+            // PauseButton
+            // 
+            resources.ApplyResources(this.PauseButton, "PauseButton");
+            this.PauseButton.Name = "PauseButton";
+            this.PauseButton.UseVisualStyleBackColor = true;
             // 
             // StopButton
             // 
@@ -137,27 +154,10 @@ namespace HerbHikerApp
             this.StopButton.UseVisualStyleBackColor = true;
             this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
             // 
-            // PauseButton
+            // LoadedPathLabel
             // 
-            resources.ApplyResources(this.PauseButton, "PauseButton");
-            this.PauseButton.Name = "PauseButton";
-            this.PauseButton.UseVisualStyleBackColor = true;
-            // 
-            // ResumeButton
-            // 
-            resources.ApplyResources(this.ResumeButton, "ResumeButton");
-            this.ResumeButton.Name = "ResumeButton";
-            this.ResumeButton.UseVisualStyleBackColor = true;
-            // 
-            // BotStatusLabel
-            // 
-            resources.ApplyResources(this.BotStatusLabel, "BotStatusLabel");
-            this.BotStatusLabel.Name = "BotStatusLabel";
-            // 
-            // StatusLabel
-            // 
-            resources.ApplyResources(this.StatusLabel, "StatusLabel");
-            this.StatusLabel.Name = "StatusLabel";
+            resources.ApplyResources(this.LoadedPathLabel, "LoadedPathLabel");
+            this.LoadedPathLabel.Name = "LoadedPathLabel";
             // 
             // HerbHiker
             // 

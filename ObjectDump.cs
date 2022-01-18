@@ -72,9 +72,9 @@ namespace HerbHikerApp
 
             int currObj = mem.ReadInt(toHex(listStart));
 
-            Console.WriteLine("first={0}", toHex(currObj));
-            Console.WriteLine("Dumping object from Object Manager");
-            Console.WriteLine("addr\t\tnr\t\tType\t\tGUID");
+            // Console.WriteLine("first={0}", toHex(currObj));
+            // Console.WriteLine("Dumping object from Object Manager");
+            // Console.WriteLine("addr\t\tnr\t\tType\t\tGUID");
 
             for (int i = 0; i < SIZE; i++)
             {
@@ -83,7 +83,7 @@ namespace HerbHikerApp
 
                 if (type < 0 || type > 40)
                 {
-                    Console.WriteLine("Aborting - object seems off: {0}", toHex(currObj));
+                    // Console.WriteLine("Aborting - object seems off: {0}", toHex(currObj));
                     break;
                 }
 
@@ -106,7 +106,7 @@ namespace HerbHikerApp
                     info = guid.ToString() + " " + pos.ToString();
                 }
 
-                Console.WriteLine("{0}\t{1}\t\t{2}\t\t\t{3} {4}", toHex(currObj), i, type, desc, info);
+                // Console.WriteLine("{0}\t{1}\t\t{2}\t\t\t{3} {4}", toHex(currObj), i, type, desc, info);
 
                 // Go to next object in list
                 currObj += nextObj;
