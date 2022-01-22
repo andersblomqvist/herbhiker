@@ -39,6 +39,7 @@ namespace HerbHikerApp
                 mem.Init();
                 gen = new Generator(mem);
                 ToggleGeneratorCheckBox.Enabled = true;
+                NoclipCheckBox.Enabled = true;
             }
             else
             {
@@ -128,8 +129,6 @@ namespace HerbHikerApp
         private void ObjectDumpButton_Click(object sender, EventArgs e)
         {
             mem.ReadObjects();
-            Console.WriteLine("GameObject list:");
-            mem.PrintObjects();
         }
 
         private void ToggleGeneratorCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -155,6 +154,14 @@ namespace HerbHikerApp
         private void StopButton_Click(object sender, EventArgs e)
         {
             bot.Stop();
+        }
+
+        private void NoclipCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if(NoclipCheckBox.Checked)
+                mem.ToggleNoclip(true);
+            else
+                mem.ToggleNoclip(false);
         }
     }
 }

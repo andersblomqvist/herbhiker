@@ -36,8 +36,15 @@ namespace Herbhiker
             public const string CLIENT_CONNECTION = "0xC79CE0";
             public const string OBJ_MANAGER = "0x2ED0"; // clientConn + 2ed0
             public const string LIST_START = "0xAC"; // objManager + AC
+
+            // player object from object manager list offsets
+            public const int X_OFFSET = 0x798;
+            public const int Y_OFFSET = 0x79C;
+            public const int Z_OFFSET = 0x7A0;
+            public const int WIDTH_OFFSET = 0x850;
         }
 
         public const string NODE_GUID = "base+0x007F8120";
+        public const string LOOT_WINDOW_OPEN = "0xBFA8D8";
     }
 }

@@ -17,7 +17,6 @@ namespace HerbHikerApp
         private Mem mem;
 
         private ObjectDump objectDump;
-        private GameObject[] objects;
 
         public MemoryReader()
         {
@@ -53,24 +52,6 @@ namespace HerbHikerApp
                     mem.ReadFloat(Offsets.Player.POS_Y),
                     mem.ReadFloat(Offsets.Player.POS_Z));
             return p;
-        }
-
-        /// <summary>
-        /// Searches through the objects array for the object position with specified guid. 
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns>A point structure with XYZ or null if GUID not found</returns>
-        internal Point GetObjectPosition(ulong guid)
-        {
-            for(int i = 0; i < ObjectDump.SIZE; i++)
-            {
-                if (objects[i] == null)
-                    break;
-
-                if (objects[i].guid == guid)
-                    return objects[i].position;
-            }
-            return null;
         }
 
         /// <summary>
@@ -111,6 +92,10 @@ namespace HerbHikerApp
             return (ulong)mem.ReadLong(addr.ToString("X"));
         }
 
+        /// <summary>
+        /// Sets the nearby herb to 0. If no other herb is close it will remain 0.
+        /// Otherwise it will be a new GUID
+        /// </summary>
         internal void ClearNearbyHerb()
         {
             int addr = mem.ReadInt(Offsets.NODE_GUID);
@@ -119,11 +104,15 @@ namespace HerbHikerApp
             mem.WriteMemory(addr.ToString("X"), "long", "0");
         }
 
+        /// <summary>
+        /// Set the action for CTM. The distance is how near the player needs to be
+        /// in order for the game to recognize the action is finished.
+        /// </summary>
+        /// <param name="actionType"></param>
         internal void SetCTMAction(string actionType)
         {
             mem.WriteMemory(Offsets.CTM.ACTION, "int", actionType);
-            if (actionType == "4")
-                mem.WriteMemory(Offsets.CTM.DISTANCE, "float", "0.5");
+            mem.WriteMemory(Offsets.CTM.DISTANCE, "float", "0.5");
         }
 
         /// <summary>
@@ -137,9 +126,10 @@ namespace HerbHikerApp
             // convert guid to an array of bytes. We know its 8 bytes.
             // this works but probably a better way of doing it.
 
-            // generates: "F110000652000E7F"
-            // goal is an array with: {0xF1, 0x10, 0x00, 0x06, 0x52, 0x00, 0x0E, 0x7F}
+            // guid toString generates: "F110000652000E7F"
             string hex = guid.ToString("X");
+            
+            // goal is an byte array with: {0xF1, 0x10, 0x00, 0x06, 0x52, 0x00, 0x0E, 0x7F}
             byte[] bytes = new byte[8];
             for(int i = 0; i < 8; i++)
             {
@@ -158,13 +148,29 @@ namespace HerbHikerApp
             return (ulong) mem.ReadLong(Offsets.CTM.GUID);
         }
 
-        internal void PrintObjects()
+        internal int ReadCTMAction()
         {
-            Console.WriteLine("nr\t GUID\t\t\t\t\tPos");
-            for(int i = 0; i < objectDump.ObjectsCount(); i++)
-            {
-                Console.WriteLine("{0}\t {1}\t\t{2}", i, objects[i].guid, objects[i].position);
-            }
+            return mem.ReadInt(Offsets.CTM.ACTION);
+        }
+
+        internal void SetCTMAction()
+        {
+            mem.WriteMemory(Offsets.CTM.ACTION, "int", "4");
+        }
+
+        /// <summary>
+        /// Toggle noclip for player. It will set the player width to 0.
+        /// </summary>
+        /// <param name="state"></param>
+        internal void ToggleNoclip(bool state)
+        {
+            if (objectDump.GetPlayerPointer() == 0)
+                objectDump.Dump();
+
+            if (state)
+                mem.WriteMemory((objectDump.GetPlayerPointer() + Offsets.ObjManager.WIDTH_OFFSET).ToString("X"), "float", "0");
+            else
+                mem.WriteMemory((objectDump.GetPlayerPointer() + Offsets.ObjManager.WIDTH_OFFSET).ToString("X"), "float", "0.4");
         }
     }
 }

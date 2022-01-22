@@ -46,6 +46,7 @@ namespace HerbHikerApp
             this.PauseButton = new System.Windows.Forms.Button();
             this.StopButton = new System.Windows.Forms.Button();
             this.LoadedPathLabel = new System.Windows.Forms.Label();
+            this.NoclipCheckBox = new System.Windows.Forms.CheckBox();
             this.PathControlGroup.SuspendLayout();
             this.BotControls.SuspendLayout();
             this.SuspendLayout();
@@ -159,10 +160,18 @@ namespace HerbHikerApp
             resources.ApplyResources(this.LoadedPathLabel, "LoadedPathLabel");
             this.LoadedPathLabel.Name = "LoadedPathLabel";
             // 
+            // NoclipCheckBox
+            // 
+            resources.ApplyResources(this.NoclipCheckBox, "NoclipCheckBox");
+            this.NoclipCheckBox.Name = "NoclipCheckBox";
+            this.NoclipCheckBox.UseVisualStyleBackColor = true;
+            this.NoclipCheckBox.CheckedChanged += new System.EventHandler(this.NoclipCheckBox_CheckedChanged);
+            // 
             // HerbHiker
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.NoclipCheckBox);
             this.Controls.Add(this.BotControls);
             this.Controls.Add(this.LoadPathButton);
             this.Controls.Add(this.ObjectDumpButton);
@@ -197,6 +206,7 @@ namespace HerbHikerApp
         private System.Windows.Forms.Button ResumeButton;
         private System.Windows.Forms.Label BotStatusLabel;
         private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.CheckBox NoclipCheckBox;
     }
 }
 

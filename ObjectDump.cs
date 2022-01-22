@@ -41,11 +41,13 @@ namespace HerbHikerApp
         private readonly Mem mem;
 
         private int count;
+        private int playerPtr;
 
         public ObjectDump(Mem memory) 
         {
             this.mem = memory;
             count = 0;
+            playerPtr = 0x0;
 
             clientConnection = mem.ReadInt(Offsets.ObjManager.CLIENT_CONNECTION);
             string clientHex = toHex(clientConnection);
@@ -82,10 +84,7 @@ namespace HerbHikerApp
                 int type = mem.ReadInt(toHex(currObj + 0x14));
 
                 if (type < 0 || type > 40)
-                {
-                    // Console.WriteLine("Aborting - object seems off: {0}", toHex(currObj));
                     break;
-                }
 
                 // additional printouts
                 string info = "";
@@ -106,6 +105,21 @@ namespace HerbHikerApp
                     info = guid.ToString() + " " + pos.ToString();
                 }
 
+                if (type == (int)WowObjectType.Player)
+                {
+                    float px = mem.ReadFloat(Offsets.Player.POS_X);
+                    float py = mem.ReadFloat(Offsets.Player.POS_Y);
+                    float pz = mem.ReadFloat(Offsets.Player.POS_Z);
+
+                    float x = mem.ReadFloat(toHex(currObj + Offsets.ObjManager.X_OFFSET));
+                    float y = mem.ReadFloat(toHex(currObj + Offsets.ObjManager.Y_OFFSET));
+                    float z = mem.ReadFloat(toHex(currObj + Offsets.ObjManager.Z_OFFSET));
+
+                    // check if this player have the same coords as us
+                    if (px.Equals(x) && py.Equals(y) && pz.Equals(z))
+                        playerPtr = currObj;
+                }
+
                 // Console.WriteLine("{0}\t{1}\t\t{2}\t\t\t{3} {4}", toHex(currObj), i, type, desc, info);
 
                 // Go to next object in list
@@ -114,6 +128,18 @@ namespace HerbHikerApp
             }
 
             return objects;
+        }
+
+        /// <summary>
+        /// Returns the address to player object which comes from the object manager list
+        /// </summary>
+        /// <returns>address, otherwise 0</returns>
+        internal int GetPlayerPointer()
+        {
+            if (playerPtr != 0)
+                return playerPtr;
+            else
+                return 0;
         }
 
         internal int ObjectsCount()
