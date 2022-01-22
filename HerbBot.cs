@@ -24,7 +24,11 @@ namespace HerbHikerApp
         private Label statusLabel;
         private Loot looting;
 
-        private ulong prevHerbGUID = 0;
+        // private ulong prevHerbGUID = 0;
+
+        // Herbs we've visited but failed to pickup, due to mobs or other stuff.
+        // We don't want to go there again and get stuck
+        private List<ulong> blacklist;
 
         public HerbBot(MemoryReader mem, List<Point> path, BackgroundWorker worker, Label statusLabel)
         {
@@ -44,6 +48,8 @@ namespace HerbHikerApp
             this.worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
 
             this.looting = new Loot();
+
+            blacklist = new List<ulong>();
         }
 
         internal void Start()
@@ -65,15 +71,13 @@ namespace HerbHikerApp
             mem.ToggleNoclip(true);
             mem.ClearNearbyHerb();
 
+            // Begin at closest point in path
             int closestPointToPlayer = ClosestPointInPath();
-
-            // ignore prev herb GUID
 
             // go through the path (start at the point which is closest)
             for (int i = closestPointToPlayer; i < path.Count; i++)
             {
                 Point p = path[i];
-
                 MoveToPoint(p);
 
                 // Calculate percentage complete (how many points we have gone through)
@@ -83,6 +87,8 @@ namespace HerbHikerApp
                 Console.WriteLine("Moving to point i={0}", i);
                 while (DistanceToPoint(p) > DISTANCE_THRESHOLD)
                 {
+                    RefreshAction(p);
+
                     // Check if we have a cancel pending
                     if (worker.CancellationPending)
                     {
@@ -92,8 +98,8 @@ namespace HerbHikerApp
                     }
 
                     // while we haven't reached the point we should search for nearby herbs
-                    ulong herb = mem.ReadNearbyHerb();
-                    if(herb != 0 && herb != prevHerbGUID)
+                    ulong herb = mem.ReadNearbyHerb(blacklist);
+                    if(herb != 0 && !blacklist.Contains(herb))
                     {
                         Console.WriteLine("Searching for the nearby herb");
                         GameObject[] objects = mem.ReadObjects();
@@ -105,9 +111,8 @@ namespace HerbHikerApp
                             if (objects[j] == null)
                                 break;
                             // if a herb is found we leave path and go pick it up
-                            else if (objects[j].guid == herb && herb != prevHerbGUID)
+                            else if (objects[j].guid == herb)
                             {
-                                prevHerbGUID = herb;
                                 Console.WriteLine("Found nearby herb!");
                                 GatherHerb(herb, objects[j].position);
                                 Console.WriteLine("Successfully looted herb");
@@ -153,29 +158,24 @@ namespace HerbHikerApp
         /// <param name="herbPosition"></param>
         private void PickupHerb(ulong guid, Point herbPosition)
         {
+            int healthBefore = mem.ReadPlayerHealth();
+
             // now move to herb
-            Point aboveHerb = new Point(herbPosition.x, herbPosition.y + 2f, herbPosition.z + 20f);
+            Point aboveHerb = new Point(herbPosition.x, herbPosition.y, herbPosition.z + 10f);
             MoveToPoint(aboveHerb);
             Console.WriteLine("Going above ground!");
-            while (Point.Distance(mem.ReadPlayerPosition(), aboveHerb) > DISTANCE_THRESHOLD) {
-                int action = mem.ReadCTMAction();
-                if(action == 0 || action == 13)
-                    MoveToPoint(aboveHerb);
-            }
+            while (Point.Distance(mem.ReadPlayerPosition(), aboveHerb) > DISTANCE_THRESHOLD)
+                RefreshAction(aboveHerb);
 
             double distanceToHerb = Point.Distance(mem.ReadPlayerPosition(), herbPosition);
             Console.WriteLine("Distance to herb={0}", distanceToHerb);
             mem.ToggleNoclip(false);
 
-            // Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_SPACEBAR);
-            // System.Threading.Thread.Sleep(2800 + (int)(distanceToHerb * 100));
-            // Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_SPACEBAR);
-
             Console.WriteLine("Above herb, start grounding ...");
 
             // make player grounded.
             Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_X);
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(500);
             Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_X);
 
             Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_X);
@@ -184,20 +184,43 @@ namespace HerbHikerApp
 
             Console.WriteLine("Looting herb soon ...");
 
-            System.Threading.Thread.Sleep(1000);
+            // System.Threading.Thread.Sleep(500);
 
             // set ctm stuff to pickup herb
             mem.SetCTMGUID(guid);
             mem.SetCTMAction(Offsets.CTM.ACTION_TYPE_LOOT);
 
             // time it will take for player to move last distance to herb and gather it.
-            System.Threading.Thread.Sleep(3500);
+            int time = 0;
+            bool success = false;
+            while(time < 35)
+            {
+                bool open = mem.ReadLootWindow();
+                if(open)
+                {
+                    Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_1);
+                    System.Threading.Thread.Sleep(10);
+                    Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_1);
+                    System.Threading.Thread.Sleep(500);
+                    Console.WriteLine("Successfully looted herb!");
+                    success = true;
+                    break;
+                }
+                System.Threading.Thread.Sleep(100);
+                time += 1;
+            }
 
-            Console.WriteLine("Begin looting ...");
-            Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_1);
-            System.Threading.Thread.Sleep(10);
-            Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_1);
-            System.Threading.Thread.Sleep(500);
+            int healthAfter = mem.ReadPlayerHealth();
+
+            // blacklist this herb if no success and we've lost health!
+            if (!success && healthAfter < healthBefore)
+            {
+                blacklist.Add(guid);
+                Console.WriteLine("Blacklisting: {0} - we took damage!", guid.ToString("X"));
+            }
+                
+
+            Console.WriteLine("Leaving this herb");
         }
 
         /// <summary>
@@ -208,7 +231,8 @@ namespace HerbHikerApp
             // Move directly under herb
             Point underHerb = new Point(herbPosition.x, herbPosition.y, herbPosition.z - 25f);
             MoveToPoint(underHerb);
-            while (Point.Distance(mem.ReadPlayerPosition(), underHerb) > DISTANCE_THRESHOLD) { }
+            while (Point.Distance(mem.ReadPlayerPosition(), underHerb) > DISTANCE_THRESHOLD)
+                RefreshAction(underHerb);
 
             Console.WriteLine("Under herb now.");
 
@@ -218,6 +242,8 @@ namespace HerbHikerApp
             // go back under map again
             mem.ToggleNoclip(true);
             MoveToPoint(underHerb);
+            while (Point.Distance(mem.ReadPlayerPosition(), underHerb) > DISTANCE_THRESHOLD)
+                RefreshAction(underHerb);
         }
 
         private void PathFinished(object sender, RunWorkerCompletedEventArgs e)
@@ -234,6 +260,8 @@ namespace HerbHikerApp
                 statusLabel.Text = "finished";
                 statusLabel.ForeColor = Color.Green;
             }
+
+            mem.ToggleNoclip(false);
         }
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -266,6 +294,18 @@ namespace HerbHikerApp
         {
             Point player = mem.ReadPlayerPosition();
             return Point.Distance(p, player);
+        }
+
+        /// <summary>
+        /// Sometimes when crossing meshes with noclip the CTM action will set to
+        /// idle again while we're flying and not reached point. So refresh it!
+        /// </summary>
+        /// <param name="p"></param>
+        private void RefreshAction(Point p)
+        {
+            int action = mem.ReadCTMAction();
+            if (action == 0 || action == 13)
+                MoveToPoint(p);
         }
 
         /// <summary>

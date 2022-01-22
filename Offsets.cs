@@ -42,9 +42,11 @@ namespace Herbhiker
             public const int Y_OFFSET = 0x79C;
             public const int Z_OFFSET = 0x7A0;
             public const int WIDTH_OFFSET = 0x850;
+            public const int HEALTH_OFFSET = 0xFB0;
         }
 
         public const string NODE_GUID = "base+0x007F8120";
+        public const int NEXT_NODE_GUID = 0x28;
         public const string LOOT_WINDOW_OPEN = "0xBFA8D8";
     }
 }

@@ -84,12 +84,31 @@ namespace HerbHikerApp
         /// Reads the guid of a nearby herb (yellow dot on minimap)
         /// </summary>
         /// <returns></returns>
-        internal ulong ReadNearbyHerb()
+        internal ulong ReadNearbyHerb(List<ulong> blacklist)
         {
             int addr = mem.ReadInt(Offsets.NODE_GUID);
+            ulong guid = (ulong)mem.ReadLong(addr.ToString("X"));
             if (addr == 0)
                 return 0;
-            return (ulong)mem.ReadLong(addr.ToString("X"));
+            else if (blacklist.Contains(guid))
+            {
+                // search next nearby herb.
+                for (int i = 0; i < 10; i++)
+                {
+                    addr += Offsets.NEXT_NODE_GUID;
+                    guid = (ulong)mem.ReadLong(addr.ToString("X"));
+
+                    // check if guid is valid.
+                    if (guid.ToString("X").ElementAt(0) != 'F')
+                        break;
+                    else
+                        return (ulong)mem.ReadLong(addr.ToString("X"));
+                }
+            }
+            else
+                return guid;
+
+            return 0;
         }
 
         /// <summary>
@@ -171,6 +190,31 @@ namespace HerbHikerApp
                 mem.WriteMemory((objectDump.GetPlayerPointer() + Offsets.ObjManager.WIDTH_OFFSET).ToString("X"), "float", "0");
             else
                 mem.WriteMemory((objectDump.GetPlayerPointer() + Offsets.ObjManager.WIDTH_OFFSET).ToString("X"), "float", "0.4");
+        }
+
+        /// <summary>
+        /// Returns the player health. If it failed return -1
+        /// </summary>
+        /// <returns></returns>
+        internal int ReadPlayerHealth()
+        {
+            if (objectDump.GetPlayerPointer() == 0)
+                objectDump.Dump();
+
+            int health = mem.ReadInt((objectDump.GetPlayerPointer() + Offsets.ObjManager.HEALTH_OFFSET).ToString("X"));
+            if (health < 0 && health > 50000)
+                return -1;
+            else
+                return health;
+        }
+
+        internal bool ReadLootWindow()
+        {
+            int value = mem.ReadInt(Offsets.LOOT_WINDOW_OPEN);
+            if (value == 0)
+                return false;
+            else
+                return true;
         }
     }
 }
