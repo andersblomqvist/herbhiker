@@ -76,6 +76,9 @@ namespace HerbHikerApp
                     }
 
                     FollowPath(e);
+
+                    // clear blacklist after iteration
+                    blacklist = new List<ulong>();
                 }
             else
                 FollowPath(e);
@@ -121,7 +124,7 @@ namespace HerbHikerApp
 
                     // while we haven't reached the point we should search for nearby herbs
                     ulong herb = mem.ReadNearbyHerb(blacklist);
-                    if (herb != 0 || !blacklist.Contains(herb))
+                    if (herb != 0)
                     {
                         Console.WriteLine("Searching for the nearby herb");
                         GameObject[] objects = mem.ReadObjects();
