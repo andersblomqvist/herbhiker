@@ -15,16 +15,12 @@ namespace HerbHikerApp
         // How near player need to be in order to count as point is reached.
         private const double DISTANCE_THRESHOLD = 3.0d;
 
-        // If player closer than this we initiate loot action
-        private const double LOOT_DISTANCE = 15d;
-
         private readonly MemoryReader mem;
-        private List<Point> path;
-        private BackgroundWorker worker;
-        private Label statusLabel;
-        private Loot looting;
+        private readonly BackgroundWorker worker;
+        private readonly Label statusLabel;
 
-        // private ulong prevHerbGUID = 0;
+        private List<Point> path;
+        private bool loop;
 
         // Herbs we've visited but failed to pickup, due to mobs or other stuff.
         // We don't want to go there again and get stuck
@@ -47,14 +43,14 @@ namespace HerbHikerApp
             this.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(PathFinished);
             this.worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
 
-            this.looting = new Loot();
-
             blacklist = new List<ulong>();
         }
 
-        internal void Start()
+        internal void Start(bool loop)
         {
             Console.WriteLine("Starting the bot ...");
+
+            this.loop = loop;
 
             // Create a background worker and start moving along loaded path.
             if(!worker.IsBusy)
@@ -67,6 +63,31 @@ namespace HerbHikerApp
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (loop)
+                while (true)
+                {
+                    // Check if we have a cancel pending
+                    if (worker.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        Console.WriteLine("Stopping the bot ...");
+                        break;
+                    }
+
+                    FollowPath(e);
+                }
+            else
+                FollowPath(e);
+
+            Console.WriteLine("Path finished");
+        }
+
+        /// <summary>
+        /// Make player move along path and search for herbs.
+        /// </summary>
+        /// <param name="e"></param>
+        private void FollowPath(DoWorkEventArgs e)
         {
             mem.ToggleNoclip(true);
             mem.ClearNearbyHerb();
@@ -93,13 +114,14 @@ namespace HerbHikerApp
                     if (worker.CancellationPending)
                     {
                         e.Cancel = true;
+                        i = path.Count;
                         Console.WriteLine("Stopping the bot ...");
                         break;
                     }
 
                     // while we haven't reached the point we should search for nearby herbs
                     ulong herb = mem.ReadNearbyHerb(blacklist);
-                    if(herb != 0 && !blacklist.Contains(herb))
+                    if (herb != 0 || !blacklist.Contains(herb))
                     {
                         Console.WriteLine("Searching for the nearby herb");
                         GameObject[] objects = mem.ReadObjects();
@@ -115,7 +137,6 @@ namespace HerbHikerApp
                             {
                                 Console.WriteLine("Found nearby herb!");
                                 GatherHerb(herb, objects[j].position);
-                                Console.WriteLine("Successfully looted herb");
 
                                 // sets the herb guid to 0. Will be set to new id if another herb is close
                                 mem.ClearNearbyHerb();
@@ -128,11 +149,8 @@ namespace HerbHikerApp
                         Console.WriteLine("Moving back to point in path");
                     }
                 }
-
                 Console.WriteLine("Reached point, going to next!");
             }
-
-            Console.WriteLine("Path finished");
         }
 
         /// <summary>
@@ -160,8 +178,8 @@ namespace HerbHikerApp
         {
             int healthBefore = mem.ReadPlayerHealth();
 
-            // now move to herb
-            Point aboveHerb = new Point(herbPosition.x, herbPosition.y, herbPosition.z + 10f);
+            // now move to herb, needs to be a bit off in order for loot action to work
+            Point aboveHerb = new Point(herbPosition.x, herbPosition.y + 3f, herbPosition.z + 10f);
             MoveToPoint(aboveHerb);
             Console.WriteLine("Going above ground!");
             while (Point.Distance(mem.ReadPlayerPosition(), aboveHerb) > DISTANCE_THRESHOLD)
@@ -179,12 +197,12 @@ namespace HerbHikerApp
             Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_X);
 
             Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_X);
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(250);
             Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_X);
 
             Console.WriteLine("Looting herb soon ...");
 
-            // System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(500);
 
             // set ctm stuff to pickup herb
             mem.SetCTMGUID(guid);
@@ -193,15 +211,15 @@ namespace HerbHikerApp
             // time it will take for player to move last distance to herb and gather it.
             int time = 0;
             bool success = false;
-            while(time < 35)
+            while(time < 40)
             {
                 bool open = mem.ReadLootWindow();
                 if(open)
                 {
                     Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_1);
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(50);
                     Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_1);
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(50);
                     Console.WriteLine("Successfully looted herb!");
                     success = true;
                     break;
@@ -213,12 +231,11 @@ namespace HerbHikerApp
             int healthAfter = mem.ReadPlayerHealth();
 
             // blacklist this herb if no success and we've lost health!
-            if (!success && healthAfter < healthBefore)
+            if (!success && healthAfter + 100 < healthBefore)
             {
                 blacklist.Add(guid);
                 Console.WriteLine("Blacklisting: {0} - we took damage!", guid.ToString("X"));
             }
-                
 
             Console.WriteLine("Leaving this herb");
         }
@@ -269,9 +286,6 @@ namespace HerbHikerApp
             statusLabel.Text = "running ... " + e.ProgressPercentage + "%";
             statusLabel.ForeColor = Color.DarkOrange;
         }
-
-        private void Resume() {}
-        private void Pause() {}
 
         internal void Stop()
         {

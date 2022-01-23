@@ -42,11 +42,10 @@ namespace HerbHikerApp
             this.BotControls = new System.Windows.Forms.GroupBox();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.BotStatusLabel = new System.Windows.Forms.Label();
-            this.ResumeButton = new System.Windows.Forms.Button();
-            this.PauseButton = new System.Windows.Forms.Button();
             this.StopButton = new System.Windows.Forms.Button();
             this.LoadedPathLabel = new System.Windows.Forms.Label();
             this.NoclipCheckBox = new System.Windows.Forms.CheckBox();
+            this.LoopPathCheckbox = new System.Windows.Forms.CheckBox();
             this.PathControlGroup.SuspendLayout();
             this.BotControls.SuspendLayout();
             this.SuspendLayout();
@@ -115,10 +114,9 @@ namespace HerbHikerApp
             // 
             // BotControls
             // 
+            this.BotControls.Controls.Add(this.LoopPathCheckbox);
             this.BotControls.Controls.Add(this.StatusLabel);
             this.BotControls.Controls.Add(this.BotStatusLabel);
-            this.BotControls.Controls.Add(this.ResumeButton);
-            this.BotControls.Controls.Add(this.PauseButton);
             this.BotControls.Controls.Add(this.StopButton);
             this.BotControls.Controls.Add(this.LoadedPathLabel);
             this.BotControls.Controls.Add(this.StartButton);
@@ -135,18 +133,6 @@ namespace HerbHikerApp
             // 
             resources.ApplyResources(this.BotStatusLabel, "BotStatusLabel");
             this.BotStatusLabel.Name = "BotStatusLabel";
-            // 
-            // ResumeButton
-            // 
-            resources.ApplyResources(this.ResumeButton, "ResumeButton");
-            this.ResumeButton.Name = "ResumeButton";
-            this.ResumeButton.UseVisualStyleBackColor = true;
-            // 
-            // PauseButton
-            // 
-            resources.ApplyResources(this.PauseButton, "PauseButton");
-            this.PauseButton.Name = "PauseButton";
-            this.PauseButton.UseVisualStyleBackColor = true;
             // 
             // StopButton
             // 
@@ -166,6 +152,12 @@ namespace HerbHikerApp
             this.NoclipCheckBox.Name = "NoclipCheckBox";
             this.NoclipCheckBox.UseVisualStyleBackColor = true;
             this.NoclipCheckBox.CheckedChanged += new System.EventHandler(this.NoclipCheckBox_CheckedChanged);
+            // 
+            // LoopPathCheckbox
+            // 
+            resources.ApplyResources(this.LoopPathCheckbox, "LoopPathCheckbox");
+            this.LoopPathCheckbox.Name = "LoopPathCheckbox";
+            this.LoopPathCheckbox.UseVisualStyleBackColor = true;
             // 
             // HerbHiker
             // 
@@ -202,11 +194,10 @@ namespace HerbHikerApp
         private System.Windows.Forms.GroupBox BotControls;
         private System.Windows.Forms.Label LoadedPathLabel;
         private System.Windows.Forms.Button StopButton;
-        private System.Windows.Forms.Button PauseButton;
-        private System.Windows.Forms.Button ResumeButton;
         private System.Windows.Forms.Label BotStatusLabel;
         private System.Windows.Forms.Label StatusLabel;
         private System.Windows.Forms.CheckBox NoclipCheckBox;
+        private System.Windows.Forms.CheckBox LoopPathCheckbox;
     }
 }
 

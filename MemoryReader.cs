@@ -101,7 +101,7 @@ namespace HerbHikerApp
                     // check if guid is valid.
                     if (guid.ToString("X").ElementAt(0) != 'F')
                         break;
-                    else
+                    else if(!blacklist.Contains(guid))
                         return (ulong)mem.ReadLong(addr.ToString("X"));
                 }
             }

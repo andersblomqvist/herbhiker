@@ -172,7 +172,7 @@
     <value>NoControl</value>
   </data>
   <data name="StartButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 59</value>
+    <value>8, 78</value>
   </data>
   <data name="StartButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -193,13 +193,13 @@
     <value>BotControls</value>
   </data>
   <data name="&gt;&gt;StartButton.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="ToggleGeneratorCheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="ToggleGeneratorCheckBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>188, 85</value>
+    <value>188, 55</value>
   </data>
   <data name="ToggleGeneratorCheckBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>134, 17</value>
@@ -301,7 +301,7 @@
     <value>2</value>
   </data>
   <data name="PathControlGroup.Location" type="System.Drawing.Point, System.Drawing">
-    <value>188, 108</value>
+    <value>188, 79</value>
   </data>
   <data name="PathControlGroup.Size" type="System.Drawing.Size, System.Drawing">
     <value>168, 57</value>
@@ -328,7 +328,7 @@
     <value>4</value>
   </data>
   <data name="ObjectDumpButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>188, 171</value>
+    <value>188, 157</value>
   </data>
   <data name="ObjectDumpButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>168, 27</value>
@@ -351,104 +351,35 @@
   <data name="&gt;&gt;ObjectDumpButton.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="&gt;&gt;StatusLabel.Name" xml:space="preserve">
-    <value>StatusLabel</value>
+  <data name="LoopPathCheckbox.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="&gt;&gt;StatusLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="LoopPathCheckbox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;StatusLabel.Parent" xml:space="preserve">
+  <data name="LoopPathCheckbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 56</value>
+  </data>
+  <data name="LoopPathCheckbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 17</value>
+  </data>
+  <data name="LoopPathCheckbox.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="LoopPathCheckbox.Text" xml:space="preserve">
+    <value>Loop path</value>
+  </data>
+  <data name="&gt;&gt;LoopPathCheckbox.Name" xml:space="preserve">
+    <value>LoopPathCheckbox</value>
+  </data>
+  <data name="&gt;&gt;LoopPathCheckbox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LoopPathCheckbox.Parent" xml:space="preserve">
     <value>BotControls</value>
   </data>
-  <data name="&gt;&gt;StatusLabel.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;LoopPathCheckbox.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="&gt;&gt;BotStatusLabel.Name" xml:space="preserve">
-    <value>BotStatusLabel</value>
-  </data>
-  <data name="&gt;&gt;BotStatusLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;BotStatusLabel.Parent" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;BotStatusLabel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.Name" xml:space="preserve">
-    <value>ResumeButton</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.Parent" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.Name" xml:space="preserve">
-    <value>PauseButton</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.Parent" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;StopButton.Name" xml:space="preserve">
-    <value>StopButton</value>
-  </data>
-  <data name="&gt;&gt;StopButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;StopButton.Parent" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;StopButton.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;LoadedPathLabel.Name" xml:space="preserve">
-    <value>LoadedPathLabel</value>
-  </data>
-  <data name="&gt;&gt;LoadedPathLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LoadedPathLabel.Parent" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;LoadedPathLabel.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="BotControls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 79</value>
-  </data>
-  <data name="BotControls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 119</value>
-  </data>
-  <data name="BotControls.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="BotControls.Text" xml:space="preserve">
-    <value>Bot Controls</value>
-  </data>
-  <data name="BotControls.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;BotControls.Name" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;BotControls.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;BotControls.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;BotControls.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="StatusLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -478,7 +409,7 @@
     <value>BotControls</value>
   </data>
   <data name="&gt;&gt;StatusLabel.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="BotStatusLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -508,73 +439,13 @@
     <value>BotControls</value>
   </data>
   <data name="&gt;&gt;BotStatusLabel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="ResumeButton.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="ResumeButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="ResumeButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 59</value>
-  </data>
-  <data name="ResumeButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="ResumeButton.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="ResumeButton.Text" xml:space="preserve">
-    <value>Resume</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.Name" xml:space="preserve">
-    <value>ResumeButton</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.Parent" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;ResumeButton.ZOrder" xml:space="preserve">
     <value>2</value>
-  </data>
-  <data name="PauseButton.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="PauseButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="PauseButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 88</value>
-  </data>
-  <data name="PauseButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="PauseButton.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="PauseButton.Text" xml:space="preserve">
-    <value>Pause</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.Name" xml:space="preserve">
-    <value>PauseButton</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.Parent" xml:space="preserve">
-    <value>BotControls</value>
-  </data>
-  <data name="&gt;&gt;PauseButton.ZOrder" xml:space="preserve">
-    <value>3</value>
   </data>
   <data name="StopButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="StopButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 88</value>
+    <value>89, 78</value>
   </data>
   <data name="StopButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -595,7 +466,7 @@
     <value>BotControls</value>
   </data>
   <data name="&gt;&gt;StopButton.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="LoadedPathLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -622,7 +493,34 @@
     <value>BotControls</value>
   </data>
   <data name="&gt;&gt;LoadedPathLabel.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
+  </data>
+  <data name="BotControls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 79</value>
+  </data>
+  <data name="BotControls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>170, 107</value>
+  </data>
+  <data name="BotControls.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="BotControls.Text" xml:space="preserve">
+    <value>Bot Controls</value>
+  </data>
+  <data name="BotControls.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;BotControls.Name" xml:space="preserve">
+    <value>BotControls</value>
+  </data>
+  <data name="&gt;&gt;BotControls.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BotControls.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;BotControls.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="NoclipCheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -631,7 +529,7 @@
     <value>False</value>
   </data>
   <data name="NoclipCheckBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>188, 62</value>
+    <value>188, 32</value>
   </data>
   <data name="NoclipCheckBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 17</value>
@@ -661,7 +559,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>366, 208</value>
+    <value>366, 195</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>HerbHiker 3.3.5a</value>

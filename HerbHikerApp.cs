@@ -51,7 +51,7 @@ namespace HerbHikerApp
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            bot.Start();
+            bot.Start(LoopPathCheckbox.Checked);
         }
 
         private void TestPathButton_Click(object sender, EventArgs e)
