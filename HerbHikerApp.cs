@@ -119,9 +119,7 @@ namespace HerbHikerApp
                 if (generator)
                     gen.LoadPath(path);
 
-                if (bot == null)
-                    bot = new HerbBot(mem, path, worker, BotStatusLabel);
-
+                bot = new HerbBot(mem, path, worker, BotStatusLabel);
                 BotControls.Visible = true;
             }
         }

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Memory;
 
 namespace HerbHikerApp
 {
@@ -51,47 +44,6 @@ namespace HerbHikerApp
             VK_SPACEBAR = 0x20
         }
 
-        ///summary> 
-        /// Virtual Messages 
-        /// </summary> 
-        // public enum WMessages : int;
-
-        /// <summary>
-        /// Sends a message to the specified window
-        /// </summary>
-        /// <param name="winTitle">string Title of window</param>
-        /// <param name="Key">Virtual key code of the key to send</param>
-        /*
-        public static void ControlSendMessage(string winTitle, VirtualKeyStates Key, bool shift)
-        {
-            IntPtr hWnd = FindWindow(null, winTitle);
-
-            if (shift == true)
-            {
-                //send shift down
-                // SendMessage(hWnd, 0x100, (int)VirtualKeyStates.VK_SHIFT, 0);
-                //send key down
-                SendMessage(hWnd, 0x100, (int)Key, 0);
-                //sleep 50ms
-                System.Threading.Thread.Sleep(50);
-                //send key up
-                SendMessage(hWnd, 0x101, (int)Key, 0);
-                //send shift up
-                // SendMessage(hWnd, 0x101, (int)VirtualKeyStates.VK_SHIFT, 0);
-            }
-
-            else
-            {
-                //send key down
-                SendMessage(hWnd, 0x100, (int)Key, 0);
-                //sleep 50ms
-                System.Threading.Thread.Sleep(50);
-                //send key up
-                SendMessage(hWnd, 0x101, (int)Key, 0);
-            }
-        }
-        */
-
         /// <summary>
         /// Sends a Keydown message(0x100) to the specified window with a Virtual Key
         /// </summary>
@@ -112,15 +64,6 @@ namespace HerbHikerApp
         {
             IntPtr hWnd = FindWindow(null, winTitle);
             SendMessage(hWnd, 0x101, (int)Key, 0);
-        }
-
-
-        /// <summary> 
-        /// Sends a message to the specified handle 
-        /// </summary> 
-        public void _SendMessage(IntPtr handle, int Msg, int wParam, int lParam)
-        {
-            SendMessage(handle, Msg, wParam, lParam);
         }
     }
 }
