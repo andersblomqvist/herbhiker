@@ -55,21 +55,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HerbBot.cs" />
-    <Compile Include="Loot.cs" />
-    <Compile Include="MemoryReader.cs" />
-    <Compile Include="GameObject.cs" />
-    <Compile Include="Offsets.cs" />
-    <Compile Include="Generator.cs" />
-    <Compile Include="GlobalHotKey.cs" />
+    <Compile Include="Bot\HerbBot.cs" />
+    <Compile Include="Bot\Loot.cs" />
+    <Compile Include="Common\MemoryReader.cs" />
+    <Compile Include="Common\GameObject.cs" />
+    <Compile Include="Common\Offsets.cs" />
+    <Compile Include="Generator\Generator.cs" />
+    <Compile Include="Generator\GlobalHotKey.cs" />
     <Compile Include="HerbHikerApp.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="HerbHikerApp.Designer.cs">
       <DependentUpon>HerbHikerApp.cs</DependentUpon>
     </Compile>
-    <Compile Include="ObjectDump.cs" />
-    <Compile Include="Point.cs" />
+    <Compile Include="Common\ObjectDump.cs" />
+    <Compile Include="Common\Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="HerbHikerApp.en-SE.resx">
