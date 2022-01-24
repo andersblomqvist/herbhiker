@@ -98,9 +98,10 @@ namespace HerbHikerApp
                     addr += Offsets.NEXT_NODE_GUID;
                     guid = (ulong)mem.ReadLong(addr.ToString("X"));
 
-                    // check if guid is valid.
+                    // If guid not vaild, stop and return 0.
                     if (guid.ToString("X").ElementAt(0) != 'F')
                         break;
+                    // if it was valid, check if not blacklisted.
                     else if(!blacklist.Contains(guid))
                         return (ulong)mem.ReadLong(addr.ToString("X"));
                 }

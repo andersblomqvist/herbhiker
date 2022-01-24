@@ -26,6 +26,8 @@ namespace HerbHikerApp
         // We don't want to go there again and get stuck
         private List<ulong> blacklist;
 
+        private readonly Random rand;
+
         public HerbBot(MemoryReader mem, List<Point> path, BackgroundWorker worker, Label statusLabel)
         {
             this.mem = mem;
@@ -44,6 +46,7 @@ namespace HerbHikerApp
             this.worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
 
             blacklist = new List<ulong>();
+            rand = new Random();
         }
 
         internal void Start(bool loop)
@@ -180,32 +183,28 @@ namespace HerbHikerApp
         private void PickupHerb(ulong guid, Point herbPosition)
         {
             int healthBefore = mem.ReadPlayerHealth();
+            int healthAfter;
+
+            float r1 = (float)(rand.NextDouble() - 0.5d) * 15;
+            float r2 = (float)(rand.NextDouble() - 0.5d) * 15;
 
             // now move to herb, needs to be a bit off in order for loot action to work
-            Point aboveHerb = new Point(herbPosition.x, herbPosition.y + 3f, herbPosition.z + 10f);
+            Point aboveHerb = new Point(herbPosition.x + r1, herbPosition.y + r2, herbPosition.z + 10f);
             MoveToPoint(aboveHerb);
             Console.WriteLine("Going above ground!");
             while (Point.Distance(mem.ReadPlayerPosition(), aboveHerb) > DISTANCE_THRESHOLD)
                 RefreshAction(aboveHerb);
 
-            double distanceToHerb = Point.Distance(mem.ReadPlayerPosition(), herbPosition);
-            Console.WriteLine("Distance to herb={0}", distanceToHerb);
             mem.ToggleNoclip(false);
 
             Console.WriteLine("Above herb, start grounding ...");
 
             // make player grounded.
-            Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_X);
-            System.Threading.Thread.Sleep(500);
-            Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_X);
-
-            Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_X);
-            System.Threading.Thread.Sleep(250);
-            Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_X);
+            XGround(250);
+            XGround(250);
+            XGround(350);
 
             Console.WriteLine("Looting herb soon ...");
-
-            System.Threading.Thread.Sleep(500);
 
             // set ctm stuff to pickup herb
             mem.SetCTMGUID(guid);
@@ -214,11 +213,13 @@ namespace HerbHikerApp
             // time it will take for player to move last distance to herb and gather it.
             int time = 0;
             bool success = false;
-            while(time < 40)
+            bool dangerous = false;
+            while(time < 45)
             {
                 bool open = mem.ReadLootWindow();
                 if(open)
                 {
+                    Console.WriteLine("Loot window open!");
                     Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_1);
                     System.Threading.Thread.Sleep(50);
                     Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_1);
@@ -229,18 +230,36 @@ namespace HerbHikerApp
                 }
                 System.Threading.Thread.Sleep(100);
                 time += 1;
+
+                // quit if we are losing health
+                healthAfter = mem.ReadPlayerHealth();
+                if(healthAfter + 100 < healthBefore)
+                {
+                    Console.WriteLine("Health check: before={0}, after={1}", healthBefore, healthAfter);
+                    dangerous = true;
+                    break;
+                }
             }
 
-            int healthAfter = mem.ReadPlayerHealth();
-
             // blacklist this herb if no success and we've lost health!
-            if (!success && healthAfter + 100 < healthBefore)
+            if (!success && dangerous)
             {
                 blacklist.Add(guid);
                 Console.WriteLine("Blacklisting: {0} - we took damage!", guid.ToString("X"));
+                Console.WriteLine("Leaving this herb");
             }
+        }
 
-            Console.WriteLine("Leaving this herb");
+
+        /// <summary>
+        /// Press X key for ms millisec. X key is move down which makes us grounded.
+        /// </summary>
+        /// <param name="ms"></param>
+        private void XGround(int ms)
+        {
+            Loot.KeyDown("World of Warcraft", Loot.VirtualKeyStates.VK_X);
+            System.Threading.Thread.Sleep(ms);
+            Loot.KeyUp("World of Warcraft", Loot.VirtualKeyStates.VK_X);
         }
 
         /// <summary>
